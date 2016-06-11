@@ -1,0 +1,24 @@
+{
+    "author": "yoosee@gmail.com",
+    "dependencies": {},
+    "keywords": [],
+    "name": "timemeterwatch",
+    "pebble": {
+        "capabilities": [
+            ""
+        ],
+        "displayName": "TimeMeterWatch",
+        "enableMultiJS": false,
+        "messageKeys": {},
+        "projectType": "native",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "uuid": "46e2f7d1-7b2f-4a19-9d2b-bc0db3c7da4d",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.0.0"
+}
