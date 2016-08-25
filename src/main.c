@@ -6,6 +6,12 @@ static Window *s_main_window;
 static TextLayer *s_clock_label;
 static GFont s_clock_font;
 
+static GFont s_month_font;
+TextLayer *month_label[12];
+
+static GFont s_hour_font;
+TextLayer *hour_label[24];
+
 static GBitmap *s_background_bitmap;
 static BitmapLayer *s_background_layer;
 
@@ -23,13 +29,13 @@ static void setup_colors() {
 static void proc_hands_update (Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
   // GPoint center = grect_center_point(&bounds);
-  
-  // Read Color codes
+  graphics_context_set_antialiased(ctx, true);
+
   setup_colors();
   
   time_t now = time(NULL);
   struct tm *t = localtime(&now);  
-  
+
   // hour hand in 24 hours
   GColor color_hourhand = GColorFromHEX(colorcode_hourhand);
   graphics_context_set_fill_color(ctx, color_hourhand);
@@ -62,10 +68,59 @@ static void update_time() {
   
 }
 
-static void setup_face() {
-  //graphics_context_set_fill_color(ctx, GColorBlack);
-  //graphics_fill_rect(ctx, GRect(bounds.size.w / 2 - 1, bounds.size.h / 2 - 1, 3, 3), 0, GCornerNone);
+static void setup_face_month() {
+  Layer *window_layer = window_get_root_layer(s_main_window);
+  GRect bounds = layer_get_bounds(window_layer);
+  GPoint center = grect_center_point(&bounds);
   
+  s_month_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_YEARHAND_14));
+  int32_t label_radius = PBL_IF_ROUND_ELSE(35, 30);
+  int32_t label_size = 22;
+  //const char *mn[] = {"1","2","3","4","5","6","7","8","9","10","11","12"};
+  const char *mn[] = {"J","F","M","A","M","J","J","A","S","O","N","D"};
+ 
+  for(int32_t m=0;m<12;++m) {
+    int32_t angle = TRIG_MAX_ANGLE * (m+6) * 5 / 60;
+    GPoint pos;
+    pos.x = (-sin_lookup(angle) * label_radius / TRIG_MAX_RATIO) + center.x - (label_size/2);
+    pos.y = (cos_lookup(angle) * label_radius / TRIG_MAX_RATIO) + center.y - (label_size/2);
+    month_label[m] = text_layer_create(GRect(pos.x, pos.y, label_size, label_size));
+    text_layer_set_background_color(month_label[m], GColorClear);
+    text_layer_set_text_color(month_label[m], GColorLightGray);
+    text_layer_set_text_alignment(month_label[m], GTextAlignmentCenter);  
+    text_layer_set_font(month_label[m], s_month_font);
+    text_layer_set_text(month_label[m], mn[m]);
+    APP_LOG(APP_LOG_LEVEL_INFO, "adding month: %s at %d, %d angle (%d / %d) from %d, %d",mn[m], pos.x, pos.y, (int)angle, TRIG_MAX_ANGLE, center.x, center.y);
+    layer_add_child(window_layer, text_layer_get_layer(month_label[m]));
+  }
+  
+}
+
+static void setup_face_hour() {
+Layer *window_layer = window_get_root_layer(s_main_window);
+  GRect bounds = layer_get_bounds(window_layer);
+  GPoint center = grect_center_point(&bounds);
+  
+  s_hour_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_YEARHAND_14));
+  int32_t label_radius = PBL_IF_ROUND_ELSE(80, 66);
+  int32_t label_size = 18;
+  //const char *num[] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"};
+  const char *num[] = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"};
+ 
+  for(int32_t m=0;m<24;++m) {
+    int32_t angle = TRIG_MAX_ANGLE * (m+12) * 15 / 360;
+    GPoint pos;
+    pos.x = (-sin_lookup(angle) * label_radius / TRIG_MAX_RATIO) + center.x - (label_size/2);
+    pos.y = (cos_lookup(angle) * label_radius / TRIG_MAX_RATIO) + center.y - (label_size/2);
+    hour_label[m] = text_layer_create(GRect(pos.x, pos.y, label_size, label_size));
+    text_layer_set_background_color(hour_label[m], GColorClear);
+    text_layer_set_text_color(hour_label[m], GColorWhite);
+    text_layer_set_text_alignment(hour_label[m], GTextAlignmentCenter);  
+    text_layer_set_font(hour_label[m], s_hour_font);
+    text_layer_set_text(hour_label[m], num[m]);
+    APP_LOG(APP_LOG_LEVEL_INFO, "adding hour: %s at %d, %d angle (%d / %d) from %d, %d",num[m], pos.x, pos.y, (int)angle, TRIG_MAX_ANGLE, center.x, center.y);
+    layer_add_child(window_layer, text_layer_get_layer(hour_label[m]));
+  }
 }
 
 static void setup_hands() {
@@ -85,25 +140,9 @@ static void main_window_load(Window *window) {
   GRect bounds = layer_get_bounds(window_layer);
   
   // Setup face
-  setup_face();
+  setup_face_month();
+  setup_face_hour();
 
-  /*
-  // Create GBitmap and add it to Background Layer
-  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND); // Replace image in RESOURCES
-  s_background_layer = bitmap_layer_create(bounds);
-  bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
-  layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
-
-  // Create Text Layer 
-  s_clock_label = text_layer_create(GRect(0, 40, bounds.size.w, 40));  
-  text_layer_set_background_color(s_clock_label, GColorClear);
-  text_layer_set_text_color(s_clock_label, GColorBlack); // Set Clock Color
-  text_layer_set_text_alignment(s_clock_label, GTextAlignmentCenter);
-  s_clock_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_CLOCK_34));
-  text_layer_set_font(s_clock_label, s_clock_font);
-  layer_add_child(window_layer, text_layer_get_layer(s_clock_label));
-  */
-  
   // Create Hands Layer and add it to the top of Root Window
   s_hands_layer = layer_create(bounds);
   layer_set_update_proc(s_hands_layer, proc_hands_update);
@@ -114,16 +153,17 @@ static void main_window_load(Window *window) {
 }
 
 static void main_window_unload(Window *window) {  
-  /*
-  gbitmap_destroy(s_background_bitmap);
-  bitmap_layer_destroy(s_background_layer);  
+  fonts_unload_custom_font(s_month_font);
+  fonts_unload_custom_font(s_hour_font);
+
+  for(int32_t i=0; i<12; ++i) {
+    text_layer_destroy(month_label[i]);
+  }
+  for(int32_t i=0; i<24; ++i) {
+    text_layer_destroy(hour_label[i]);
+  }
   
-  fonts_unload_custom_font(s_clock_font);
-  text_layer_destroy(s_clock_label);
-  */
-  
-  
-}
+} 
 
 static void init(void) {
   s_main_window = window_create();
@@ -136,7 +176,6 @@ static void init(void) {
   
   window_stack_push(s_main_window, true);
   
-  // Setup hands 
   setup_hands();
   
   tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);

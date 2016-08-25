@@ -12,7 +12,15 @@
         "messageKeys": {},
         "projectType": "native",
         "resources": {
-            "media": []
+            "media": [
+                {
+                    "characterRegex": "[0-9a-zA-Z]",
+                    "file": "fonts/Aldo PC.ttf",
+                    "name": "FONT_YEARHAND_14",
+                    "targetPlatforms": null,
+                    "type": "font"
+                }
+            ]
         },
         "sdkVersion": "3",
         "uuid": "46e2f7d1-7b2f-4a19-9d2b-bc0db3c7da4d",

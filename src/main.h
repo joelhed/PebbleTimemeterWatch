@@ -6,7 +6,7 @@
 
 #define COLOR_DEFAULT_BACKGROUND 0x000000
 #define COLOR_DEFAULT_HOURHAND 0xffffff
-#define COLOR_DEFAULT_DATEHAND 0xe35462
+#define COLOR_DEFAULT_DATEHAND 0xff0000
 
 static const GPathInfo HOUR_HAND_POINTS = {
   8, (GPoint []){
@@ -23,14 +23,14 @@ static const GPathInfo HOUR_HAND_POINTS = {
 
 static const GPathInfo DATE_HAND_POINTS = {
   8, (GPoint []) {
-    { -5,   6 },
-    { -3, 10 },
-    {  3, 10 },
-    {  5,   6 },
-    {  5,   0 },
+    { -4,   6 },
+    { -2,   8 },
+    {  2,   8 },
+    {  4,   6 },
+    {  4,   0 },
     {  1,-40 },
     { -1,-40 },
-    { -5,   0 },  
+    { -4,   0 },  
   }
 };
 
