@@ -4,12 +4,9 @@
     "keywords": [],
     "name": "timemeterwatch",
     "pebble": {
-        "capabilities": [
-            ""
-        ],
         "displayName": "TimeMeterWatch",
         "enableMultiJS": false,
-        "messageKeys": {},
+        "messageKeys": [],
         "projectType": "native",
         "resources": {
             "media": [
@@ -23,9 +20,13 @@
             ]
         },
         "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt",
+            "chalk"
+        ],
         "uuid": "46e2f7d1-7b2f-4a19-9d2b-bc0db3c7da4d",
         "watchapp": {
-            "watchface": false
+            "watchface": true
         }
     },
     "version": "1.0.0"

@@ -90,7 +90,7 @@ static void setup_face_month() {
     text_layer_set_text_alignment(month_label[m], GTextAlignmentCenter);  
     text_layer_set_font(month_label[m], s_month_font);
     text_layer_set_text(month_label[m], mn[m]);
-    APP_LOG(APP_LOG_LEVEL_INFO, "adding month: %s at %d, %d angle (%d / %d) from %d, %d",mn[m], pos.x, pos.y, (int)angle, TRIG_MAX_ANGLE, center.x, center.y);
+    //APP_LOG(APP_LOG_LEVEL_INFO, "adding month: %s at %d, %d angle (%d / %d) from %d, %d",mn[m], pos.x, pos.y, (int)angle, TRIG_MAX_ANGLE, center.x, center.y);
     layer_add_child(window_layer, text_layer_get_layer(month_label[m]));
   }
   
@@ -118,7 +118,7 @@ Layer *window_layer = window_get_root_layer(s_main_window);
     text_layer_set_text_alignment(hour_label[m], GTextAlignmentCenter);  
     text_layer_set_font(hour_label[m], s_hour_font);
     text_layer_set_text(hour_label[m], num[m]);
-    APP_LOG(APP_LOG_LEVEL_INFO, "adding hour: %s at %d, %d angle (%d / %d) from %d, %d",num[m], pos.x, pos.y, (int)angle, TRIG_MAX_ANGLE, center.x, center.y);
+    //APP_LOG(APP_LOG_LEVEL_INFO, "adding hour: %s at %d, %d angle (%d / %d) from %d, %d",num[m], pos.x, pos.y, (int)angle, TRIG_MAX_ANGLE, center.x, center.y);
     layer_add_child(window_layer, text_layer_get_layer(hour_label[m]));
   }
 }
