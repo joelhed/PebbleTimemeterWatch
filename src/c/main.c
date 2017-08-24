@@ -58,14 +58,12 @@ static void proc_hands_update (Layer *layer, GContext *ctx) {
   graphics_fill_rect(ctx, GRect(bounds.size.w / 2 - 1, bounds.size.h / 2 - 1, 3, 3), 0, GCornerNone);
 }
 
-static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
-  // Get weather update every 30 minutes
-  if(tick_time->tm_min % 30 == 0) { 
-  }
+static void update_time() {
+  layer_mark_dirty(window_get_root_layer(s_main_window));
 }
 
-static void update_time() {
-  
+static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
+  update_time();
 }
 
 static void setup_face_month() {
